@@ -24,10 +24,19 @@ func main (){
 	mux.HandleFunc("/snippet", showSnippet)
 	mux.HandleFunc("/snippet/create", createSnippet)
 
+	// creating fileserver for uploading all static files
 	fileserver := http.FileServer(http.Dir("./ui/static"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
+
+	svr := &http.Server{
+		Addr: *addr,
+		ErrorLog: errorLog,
+		Handler: mux,
+	}
+
 	infoLog.Println("Starting server on port", *addr)
-	err := http.ListenAndServe(*addr, mux)
+
+	err := svr.ListenAndServe()
 	errorLog.Fatal(err)
 	
 }
