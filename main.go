@@ -13,7 +13,9 @@ func home (w http.ResponseWriter, r *http.Request){
 	w.Write([]byte ("Hello from SnippetBox"))
 }
 func showSnippet (w http.ResponseWriter, r *http.Request){
-	w.Write([]byte ("Show all snippets..."))
+	id := r.URL.Query().Get("id")
+	w.Write([]byte (id))
+	w.Write([]byte ("Show Snippet info..."))
 }
 func createSnippet (w http.ResponseWriter, r *http.Request){
 	if (r.Method != "POST"){
