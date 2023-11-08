@@ -7,7 +7,10 @@ import (
 	"os"
 )
 
-
+type application struct{
+	infoLog *log.Logger
+	errorLog *log.Logger
+}
 func main (){
 	// Get port from cli
 	addr := flag.String( "addr", ":4000", "HTTP network address")
@@ -18,11 +21,15 @@ func main (){
 	
 	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ldate|log.Lshortfile)
 
+	app := &application{
+		infoLog,
+		errorLog,
+	}
 
 	mux:= http.NewServeMux();
-	mux.HandleFunc("/", home)
-	mux.HandleFunc("/snippet", showSnippet)
-	mux.HandleFunc("/snippet/create", createSnippet)
+	mux.HandleFunc("/",app.home)
+	mux.HandleFunc("/snippet",app.showSnippet)
+	mux.HandleFunc("/snippet/create",app.createSnippet)
 
 	// creating fileserver for uploading all static files
 	fileserver := http.FileServer(http.Dir("./ui/static"))
