@@ -4,13 +4,21 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"os"
 )
 
 
 func main (){
-
+	// Get port from cli
 	addr := flag.String( "addr", ":4000", "HTTP network address")
 	flag.Parse()
+
+	// create custom loggers
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	
+	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ldate|log.Lshortfile)
+
+
 	mux:= http.NewServeMux();
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/snippet", showSnippet)
@@ -18,8 +26,8 @@ func main (){
 
 	fileserver := http.FileServer(http.Dir("./ui/static"))
 	mux.Handle("/static/", http.StripPrefix("/static", fileserver))
-	log.Println("Srarting server on port", *addr);
+	infoLog.Println("Starting server on port", *addr)
 	err := http.ListenAndServe(*addr, mux)
-	log.Fatal(err)
+	errorLog.Fatal(err)
 	
 }
