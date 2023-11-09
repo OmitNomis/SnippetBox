@@ -38,7 +38,7 @@ func main (){
 	svr := &http.Server{
 		Addr: *addr,
 		ErrorLog: errorLog,
-		Handler: mux,
+		Handler: app.routes(),
 	}
 
 	infoLog.Println("Starting server on port", *addr)
